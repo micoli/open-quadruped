@@ -1,12 +1,10 @@
-import numpy as np
-
 
 class GaitPlanner:
-    def __init__(self, T_stance, T_swing, phase_lag):
-        self.T_stance = T_stance
-        self.T_swing = T_swing
+    def __init__(self, t_stance, t_swing, phase_lag):
+        self.t_stance = t_stance
+        self.t_swing = t_swing
         self.phase_lag = phase_lag
-        self.T_stride = self.T_swing + self.T_stance
+        self.T_stride = self.t_swing + self.t_stance
 
     def signal_sample(self, time, leg):
         phase_i = self.phase_lag[leg]
@@ -16,9 +14,9 @@ class GaitPlanner:
         while base_time < 0:
             base_time = self.T_stride - base_time
 
-        if base_time <= self.T_stance:
+        if base_time <= self.t_stance:
             # in stride period
-            return [0, base_time / self.T_stance]
+            return [False, base_time / self.t_stance]
         else:
             # in swing period
-            return [1, (base_time - self.T_stance) / self.T_swing]
+            return [True, (base_time - self.t_stance) / self.t_swing]

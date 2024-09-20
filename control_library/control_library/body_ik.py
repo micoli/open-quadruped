@@ -1,7 +1,18 @@
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
+
 class BodyIKModel:
+    def __init__(self, width, length, height):
+        self.width = width
+        self.length = length
+        self.height = height
+        self.body_points = np.array()
+        self.leg_points = np.array()
+
+        self.reset_pose()
+
+
     """Quadruped Body Inverse Kinematics Model
      - Uses transformation matrices to rotate the body about each axis for euler angle manipulation.
 
@@ -11,27 +22,25 @@ class BodyIKModel:
      methods: transform, get_htf_vectors
      """
     def reset_pose(self):
-
         # only doing this for sake of concision
         length = self.length
         width = self.width
         height = self.height
 
-        self.body_points = np.array([[length/2, -width/2, height],
-                                     [length/2, width/2, height],
-                                     [-length/2, -width/2, height], 
-                                     [-length/2, width/2, height]])
-        
-        self.leg_points =  np.array([[length/2, -width/2, 0],
-                                     [length/2, width/2, 0],
-                                     [-length/2, -width/2, 0], 
-                                     [-length/2, width/2, 0]])
-    def __init__(self, width, length, height):
-        self.width = width
-        self.length = length
-        self.height = height
+        self.body_points = np.array([
+            [length/2, -width/2, height],
+            [length/2, width/2, height],
+            [-length/2, -width/2, height],
+            [-length/2, width/2, height]
+        ])
 
-        self.reset_pose()
+        self.leg_points = np.array([
+            [length/2, -width/2, 0],
+            [length/2, width/2, 0],
+            [-length/2, -width/2, 0],
+            [-length/2, width/2, 0]
+        ])
+
         
     def transform(self, yaw, pitch, roll):
         # yaw rotation

@@ -1,5 +1,6 @@
 import math
 
+
 class LegIKModel:
     def __init__(self, upper, lower, off0, off1):
         """Leg Inverse Kinematics Model. Based on Adham Elarabawy's paper: www.adham-e.dev/papers
@@ -21,10 +22,8 @@ class LegIKModel:
                 alpha_0 = math.atan(y / z)
                 alpha_1 = math.atan(self.off1 / self.off0)
                 alpha_2 = math.atan(self.off0 / self.off1)
-                alpha_3 = math.asin(
-                    h1 * math.sin(alpha_2 + math.radians(90)) / h2)
-                alpha_4 = math.radians(
-                    180) - (alpha_3 + alpha_2 + math.radians(90))
+                alpha_3 = math.asin(h1 * math.sin(alpha_2 + math.radians(90)) / h2)
+                alpha_4 = math.radians(180) - (alpha_3 + alpha_2 + math.radians(90))
                 alpha_5 = alpha_1 - alpha_4
                 theta_h = alpha_0 - alpha_5
 
@@ -32,9 +31,11 @@ class LegIKModel:
                 h = math.sqrt(r0**2 + x**2)
                 phi = math.asin(x / h)
                 theta_s = math.acos(
-                    (h**2 + self.upper**2 - self.lower**2) / (2 * h * self.upper)) - phi
-                theta_w = math.acos((self.lower**2 + self.upper **
-                                     2 - h**2) / (2 * self.lower * self.upper))
+                    (h**2 + self.upper**2 - self.lower**2) / (2 * h * self.upper)
+                ) - phi
+                theta_w = math.acos(
+                    (self.lower**2 + self.upper **2 - h**2) / (2 * self.lower * self.upper)
+                )
                 joint_angles.append([theta_h, theta_s, theta_w])
         except:
             print("Out of Bounds.")
