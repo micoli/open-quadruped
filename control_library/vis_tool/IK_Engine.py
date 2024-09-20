@@ -49,10 +49,8 @@ class InverseKinematics:
                 alpha_0 = math.atan(y / z)
                 alpha_1 = math.atan(self.hip_offset[1] / self.hip_offset[0])
                 alpha_2 = math.atan(self.hip_offset[0] / self.hip_offset[1])
-                alpha_3 = math.asin(
-                    h1 * math.sin(alpha_2 + math.radians(90)) / h2)
-                alpha_4 = math.radians(
-                    180) - (alpha_3 + alpha_2 + math.radians(90))
+                alpha_3 = math.asin(h1 * math.sin(alpha_2 + math.radians(90)) / h2)
+                alpha_4 = math.radians(180) - (alpha_3 + alpha_2 + math.radians(90))
                 alpha_5 = alpha_1 - alpha_4
                 theta_h = alpha_0 - alpha_5
 
@@ -60,17 +58,19 @@ class InverseKinematics:
                 h = math.sqrt(r0**2 + x**2)
                 phi = math.asin(x / h)
                 theta_s = math.acos(
-                    (h**2 + self.shoulder**2 - self.wrist**2) / (2 * h * self.shoulder)) - phi
-                theta_w = math.acos((self.wrist**2 + self.shoulder **
-                                     2 - h**2) / (2 * self.wrist * self.shoulder))
+                    (h**2 + self.shoulder**2 - self.wrist**2) / (2 * h * self.shoulder)
+                ) - phi
+                theta_w = math.acos(
+                    (self.wrist**2 + self.shoulder **2 - h**2) / (2 * self.wrist * self.shoulder)
+                )
 
                 if i < 2:
                     joint_angles.append((theta_h, theta_s, theta_w))
                 else:
                     joint_angles.append((-theta_h, theta_s, theta_w))
             self.joint_angles = joint_angles
-        except:
-            print("Out of bounds.")
+        except Exception as e:
+            print("Out of bounds." + str(e))
         return self.joint_angles
 
 
@@ -108,12 +108,12 @@ class Quadruped:
                       origin[1] - self.body_dim[1] / 2, origin[2])]
 
         # back_right_leg, front_right_leg, front_left_leg, back_left_leg
-        self.legs = [Leg((-self.body_dim[0] / 2, -self.body_dim[1] / 2, origin[2])),
-                     Leg((self.body_dim[0] / 2, -
-                          self.body_dim[1] / 2, origin[2])),
-                     Leg((self.body_dim[0] / 2,
-                          self.body_dim[1] / 2, origin[2])),
-                     Leg((-self.body_dim[0] / 2, self.body_dim[1] / 2, origin[2]))]
+        self.legs = [
+            Leg((-self.body_dim[0] / 2, -self.body_dim[1] / 2, origin[2])),
+            Leg(( self.body_dim[0] / 2, -self.body_dim[1] / 2, origin[2])),
+            Leg(( self.body_dim[0] / 2,  self.body_dim[1] / 2, origin[2])),
+            Leg((-self.body_dim[0] / 2,  self.body_dim[1] / 2, origin[2]))
+        ]
 
     @staticmethod
     def add_vector(base_vector, increment):
@@ -379,8 +379,8 @@ class Quadruped:
                 if i == 3:
                     self.legs[i].z = sig_z_back - z_i
                     leg.y += y_i
-        except:
-            print("Out of bounds.")
+        except Exception as e:
+            print("Out of bounds." + str(e))
         self.fully_define(self.get_points_from_buffer())
 
         for i, vector in enumerate(self.body):

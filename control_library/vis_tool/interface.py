@@ -12,7 +12,10 @@ sys.path.append("../control")
 
 # Setting up 3D matplotlib figure
 fig = plt.figure()
-ax = Axes3D(fig)
+fig.canvas.manager.set_window_title('Animate')
+ax = fig.add_subplot(111, projection='3d')
+ax.set_aspect("equal")
+
 ax.set_aspect("equal")
 
 start_height = 170
