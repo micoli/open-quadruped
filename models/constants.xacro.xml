@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+    <!--    width/height/depth are from the top, when the pupper is facing right, x,y,z in that order,
+    i.e. if you're looking at the pupper top-down,
+    the width (x) is between front and back of the robot,
+    the height (y) is between right and left legs,
+    the depth (z) is between top of the pupper and floor-->
+
+    <xacro:property name="pi" value="3.14159265359"/>
+
+<!--    <xacro:property name="torso_width" value=".304"/>-->
+<!--    <xacro:property name="torso_height" value=".1"/>-->
+<!--    <xacro:property name="torso_depth" value=".069"/>-->
+<!--    <xacro:property name="torso_mass" value=".658"/>-->
+<!--    <xacro:property name="hip_width" value=".062"/>-->
+<!--    <xacro:property name="hip_height" value=".104"/>-->
+<!--    <xacro:property name="hip_depth" value=".044"/>-->
+<!--    <xacro:property name="hip_mass" value=".192"/>-->
+<!--    <xacro:property name="hip_torso_offset" value=".031"/>-->
+<!--    <xacro:property name="hip_upper_offset" value=".019"/>-->
+<!--    <xacro:property name="hip_joint_range" value="${pi / 6}"/>-->
+<!--    <xacro:property name="hip_joint_effort" value="0"/>-->
+<!--    <xacro:property name="hip_joint_vel" value="0"/>-->
+<!--    <xacro:property name="upper_length" value=".125"/>-->
+<!--    <xacro:property name="upper_radius" value=".015"/>-->
+<!--    <xacro:property name="upper_mass" value=".0165"/>-->
+<!--    <xacro:property name="lower_length" value=".115"/>-->
+<!--    <xacro:property name="lower_radius" value=".013"/>-->
+<!--    <xacro:property name="lower_mass" value=".0165"/>-->
+<!--    <xacro:property name="leg_joint_range" value="${pi / 4}"/>-->
+<!--    <xacro:property name="leg_joint_effort" value="5"/>-->
+<!--    <xacro:property name="leg_joint_vel" value="0"/>-->
+<!--    <xacro:property name="foot_radius" value=".015"/>-->
+<!--    <xacro:property name="foot_mass" value=".001"/>-->
+<!--    <xacro:property name="front_hip_x" value=".106"/>-->
+<!--    <xacro:property name="front_hip_y" value=".04"/>-->
+<!--    <xacro:property name="front_hip_z" value=".0115"/>-->
+<!--    <xacro:property name="rear_hip_x" value=".095"/>-->
+<!--    <xacro:property name="rear_hip_y" value=".04"/>-->
+<!--    <xacro:property name="rear_hip_z" value=".0115"/>-->
+<!--    <xacro:property name="upper_to_lower_joint_angle" value="-1.57079632679"/>-->
+<!--    <xacro:property name="hip_to_upper_joint_angle" value="0.78539816339"/>-->
+<!--    <xacro:property name="hip_to_upper_joint_x" value=".008"/>-->
+<!--    <xacro:property name="foot_joint_z" value="0.11"/>-->
+</robot>

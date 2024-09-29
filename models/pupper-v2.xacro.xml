@@ -1,0 +1,313 @@
+<?xml version="1.0"?>
+<robot name="pupper-v2" xmlns:xacro="http://wiki.ros.org/xacro">
+    <xacro:include filename="___xacro_variables___"/>
+    <xacro:include filename="inertia.xacro.xml"/>
+    <xacro:include filename="constants.xacro.xml"/>
+
+    <material name="red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+    <xacro:macro name="body" params="name color **geom **inertia">
+        <link name="${name}">
+            <visual>
+                <xacro:insert_block name="geom"/>
+                <material name="${color}"/>
+            </visual>
+            <collision>
+                <xacro:insert_block name="geom"/>
+            </collision>
+            <inertial>
+                <xacro:insert_block name="inertia"/>
+            </inertial>
+        </link>
+    </xacro:macro>
+
+    <xacro:macro name="geom_box" params="xyz rpy size">
+        <origin
+            xyz="${xyz}"
+            rpy="${rpy}"/>
+        <geometry>
+            <box size="${size}"/>
+        </geometry>
+    </xacro:macro>
+
+    <xacro:macro name="geom_cyl" params="xyz rpy len rad">
+        <origin
+            xyz="${xyz}"
+            rpy="${rpy}"/>
+        <geometry>
+            <cylinder length="${len}" radius="${rad}"/>
+        </geometry>
+    </xacro:macro>
+
+    <xacro:macro name="geom_sph" params="xyz rpy rad">
+        <origin
+            xyz="${xyz}"
+            rpy="${rpy}"/>
+        <geometry>
+            <sphere radius="${rad}"/>
+        </geometry>
+    </xacro:macro>
+
+    <xacro:macro name="link_box" params="name xyz rpy sizex sizey sizez mass color">
+        <xacro:body name="${name}" color="${color}">
+            <geom>
+                <xacro:geom_box
+                    xyz="${xyz}"
+                    rpy="${rpy}"
+                    size="${sizex} ${sizey} ${sizez}"/>
+            </geom>
+            <inertia>
+                <mass value="${mass}"/>
+                <xacro:solid_cuboid_inertia
+                    m="${mass}"
+                    w="${sizex}"
+                    h="${sizey}"
+                    d="${sizez}"/>
+            </inertia>
+        </xacro:body>
+    </xacro:macro>
+
+    <xacro:macro name="hip" params="leg y">
+        <xacro:body name="${leg}_hip_link" color="red">
+            <geom>
+                <xacro:geom_box
+                    xyz="0 ${y} 0"
+                    rpy="0 0 0"
+                    size="${hip_width} ${hip_height} ${hip_depth}"/>
+            </geom>
+            <inertia>
+                <mass value="${hip_mass}"/>
+                <xacro:solid_cuboid_inertia
+                    m="${hip_mass}"
+                    w="${hip_depth}"
+                    h="${hip_height}"
+                    d="${hip_width}"/>
+            </inertia>
+        </xacro:body>
+    </xacro:macro>
+
+    <xacro:macro name="joint_rev" params="name from to xyz rpy effort lower upper vel axis">
+        <joint name="${name}_joint" type="revolute">
+            <parent link="${from}"/>
+            <child link="${to}"/>
+            <origin
+                xyz="${xyz}"
+                rpy="${rpy}"/>
+            <limit
+                effort="${effort}"
+                velocity="${vel}"/>
+<!--                lower="${lower}"-->
+<!--                upper="${upper}"-->
+            <axis xyz="${axis}"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="joint_fix" params="name from to xyz rpy">
+        <joint name="${name}_joint" type="fixed">
+            <parent link="${from}"/>
+            <child link="${to}"/>
+            <origin
+                rpy="${rpy}"
+                xyz="${xyz}"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="upper_to_lower_joint" params="leg">
+        <xacro:joint_rev
+            name="${leg}_lower"
+            from="${leg}_upper_link"
+            to="${leg}_lower_link"
+            xyz="0 0 -${upper_length}"
+            rpy="0 ${upper_to_lower_joint_angle} 0"
+            effort="${leg_joint_effort}"
+            lower="-${leg_joint_range}"
+            upper="${leg_joint_range}"
+            vel="${leg_joint_vel}"
+            axis="0 1 0"/>
+    </xacro:macro>
+
+    <xacro:macro name="hip_to_upper_joint" params="leg y">
+        <xacro:joint_rev
+            name="${leg}_upper"
+            from="${leg}_hip_link"
+            to="${leg}_upper_link"
+            xyz="${-hip_to_upper_joint_x} ${y} 0"
+            rpy="0 ${hip_to_upper_joint_angle} 0"
+            effort="${leg_joint_effort}"
+            lower="-${leg_joint_range}"
+            upper="${leg_joint_range}"
+            vel="${leg_joint_vel}"
+            axis="0 1 0"/>
+    </xacro:macro>
+
+    <xacro:macro name="foot_joint" params="leg">
+        <xacro:joint_fix
+            name="${leg}_foot"
+            from="${leg}_lower_link"
+            to="${leg}_foot_link"
+            xyz="0 0 ${-foot_joint_z}"
+            rpy="0 0 0"/>
+    </xacro:macro>
+
+    <xacro:macro name="upper_leg" params="leg">
+        <xacro:body name="${leg}_upper_link" color="red">
+            <geom>
+                <xacro:geom_cyl
+                    xyz="0 0 ${-upper_length/2}"
+                    rpy="0 0 0"
+                    len="${upper_length}"
+                    rad="${upper_radius}"/>
+            </geom>
+            <inertia>
+                <mass value="${upper_mass}"/>
+                <xacro:solid_cylinder_inertia
+                    m="${upper_mass}"
+                    r="${upper_radius}"
+                    h="${upper_length}"/>
+            </inertia>
+        </xacro:body>
+    </xacro:macro>
+
+    <xacro:macro name="lower_leg" params="leg">
+        <xacro:body name="${leg}_lower_link" color="red">
+            <geom>
+                <xacro:geom_cyl
+                    xyz="0 0 ${lower_length/-2}"
+                    rpy="0 0 0"
+                    len="${lower_length}"
+                    rad="${lower_radius}"/>
+            </geom>
+            <inertia>
+                <mass value="${lower_mass}"/>
+                <xacro:solid_cylinder_inertia
+                    m="${lower_mass}"
+                    r="${lower_radius}"
+                    h="${lower_length}"/>
+            </inertia>
+        </xacro:body>
+    </xacro:macro>
+
+    <xacro:macro name="foot" params="leg">
+        <xacro:body name="${leg}_foot_link" color="red">
+            <geom>
+                <xacro:geom_sph
+                    xyz="0 0 0"
+                    rpy="0 0 0"
+                    rad="${foot_radius}"/>
+            </geom>
+            <inertia>
+                <mass value="${foot_mass}"/>
+                <xacro:solid_sphere_inertia
+                    m="${foot_mass}"
+                    r="${foot_radius}"/>
+            </inertia>
+        </xacro:body>
+    </xacro:macro>
+
+    <xacro:link_box
+        name="torso"
+        xyz="0 0 0"
+        rpy="0 0 0"
+        sizex="${torso_width}"
+        sizey="${torso_height}"
+        sizez="${torso_depth}"
+        mass="${torso_mass}"
+        color="red"/>
+
+    <!-- FR -->
+    <xacro:joint_rev name="FR_hip"
+        from="torso"
+        to="FR_hip_link"
+        xyz="${front_hip_x} ${-front_hip_y} ${-front_hip_z}"
+        rpy="0 0 0"
+        effort="${hip_joint_effort}"
+        lower="-${hip_joint_range}"
+        upper="${hip_joint_range}"
+        vel="${hip_joint_vel}"
+        axis="1 0 0"/>
+    <xacro:hip
+        leg="FR"
+        y="-${hip_torso_offset}"/>
+    <xacro:hip_to_upper_joint
+        leg="FR"
+        y="-${hip_upper_offset}"/>
+    <xacro:upper_leg leg="FR"/>
+    <xacro:upper_to_lower_joint leg="FR"/>
+    <xacro:lower_leg leg="FR"/>
+    <xacro:foot_joint leg="FR"/>
+    <xacro:foot leg="FR"/>
+
+    <!-- FL -->
+    <xacro:joint_rev
+        name="FL_hip"
+        from="torso"
+        to="FL_hip_link"
+        xyz="${front_hip_x} ${front_hip_y} ${-front_hip_z}"
+        rpy="0 0 0"
+        effort="${hip_joint_effort}"
+        lower="-${hip_joint_range}"
+        upper="${hip_joint_range}"
+        vel="${hip_joint_vel}"
+        axis="1 0 0"/>
+    <xacro:hip
+        leg="FL"
+        y="${hip_torso_offset}"/>
+    <xacro:hip_to_upper_joint
+        leg="FL"
+        y="${hip_upper_offset}"/>
+    <xacro:upper_leg leg="FL"/>
+    <xacro:upper_to_lower_joint leg="FL"/>
+    <xacro:lower_leg leg="FL"/>
+    <xacro:foot_joint leg="FL"/>
+    <xacro:foot leg="FL"/>
+
+    <!-- RR -->
+    <xacro:joint_rev
+        name="RR_hip"
+        from="torso"
+        to="RR_hip_link"
+        xyz="${-rear_hip_x} ${-rear_hip_y} ${-rear_hip_z}"
+        rpy="0 0 0"
+        effort="${hip_joint_effort}"
+        lower="-${hip_joint_range}"
+        upper="${hip_joint_range}"
+        vel="${hip_joint_vel}"
+        axis="1 0 0"/>
+    <xacro:hip
+        leg="RR"
+        y="-${hip_torso_offset}"/>
+    <xacro:hip_to_upper_joint
+        leg="RR"
+        y="-${hip_upper_offset}"/>
+    <xacro:upper_leg leg="RR"/>
+    <xacro:upper_to_lower_joint leg="RR"/>
+    <xacro:lower_leg leg="RR"/>
+    <xacro:foot_joint leg="RR"/>
+    <xacro:foot leg="RR"/>
+
+    <!-- RL -->
+    <xacro:joint_rev
+        name="RL_hip"
+        from="torso"
+        to="RL_hip_link"
+        xyz="${-rear_hip_x} ${rear_hip_y} ${-rear_hip_z}"
+        rpy="0 0 0"
+        effort="${hip_joint_effort}"
+        lower="-${hip_joint_range}"
+        upper="${hip_joint_range}"
+        vel="${hip_joint_vel}"
+        axis="1 0 0"/>
+    <xacro:hip
+        leg="RL"
+        y="${hip_torso_offset}"/>
+    <xacro:hip_to_upper_joint
+        leg="RL"
+        y="${hip_upper_offset}"/>
+    <xacro:upper_leg leg="RL"/>
+    <xacro:upper_to_lower_joint leg="RL"/>
+    <xacro:lower_leg leg="RL"/>
+    <xacro:foot_joint leg="RL"/>
+    <xacro:foot leg="RL"/>
+</robot>

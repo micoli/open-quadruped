@@ -1,0 +1,511 @@
+<?xml version="1.0" ?>
+<robot name="pupper-v2" xmlns:xacro="http://wiki.ros.org/xacro">
+  <!-- from: https://github.com/RobotnikAutomation/pallet_truck/blob/melodic-devel/pallet_truck_common/pallet_truck_description/urdf/inertia.urdf.xacro -->
+  <!-- source en.wikipedia.org/wiki/List_of_moments_of_inertia-->
+  <!-- TODO Solid sphere of radius r and mass m-->
+  <!-- TODO Hollow sphere of radius r and mass m-->
+  <!-- TODO Solid ellipsoid of semi-axes a, b, c and mass m-->
+  <!-- TODO Right circular cone with radius r, height h and mass m, about the apex -->
+  <!-- TODO Solid cuboid of width w, height h, depth d, and mass m -->
+  <!-- yes, axis in solid_cuboid_inertia are changed, w relates to X axis, d to Z axis, and h to Y axis -->
+  <!-- Keep this comment -->
+  <!-- TODO Solid cylinder of radius r, height h and mass m -->
+  <!-- TODO Thick-walled cylindrical tube with open ends, of inner radius r1, outer radius r2, length h and mass m -->
+  <!--    width/height/depth are from the top, when the pupper is facing right, x,y,z in that order,
+    i.e. if you're looking at the pupper top-down,
+    the width (x) is between front and back of the robot,
+    the height (y) is between right and left legs,
+    the depth (z) is between top of the pupper and floor-->
+  <!--    <xacro:property name="torso_width" value=".304"/>-->
+  <!--    <xacro:property name="torso_height" value=".1"/>-->
+  <!--    <xacro:property name="torso_depth" value=".069"/>-->
+  <!--    <xacro:property name="torso_mass" value=".658"/>-->
+  <!--    <xacro:property name="hip_width" value=".062"/>-->
+  <!--    <xacro:property name="hip_height" value=".104"/>-->
+  <!--    <xacro:property name="hip_depth" value=".044"/>-->
+  <!--    <xacro:property name="hip_mass" value=".192"/>-->
+  <!--    <xacro:property name="hip_torso_offset" value=".031"/>-->
+  <!--    <xacro:property name="hip_upper_offset" value=".019"/>-->
+  <!--    <xacro:property name="hip_joint_range" value="${pi / 6}"/>-->
+  <!--    <xacro:property name="hip_joint_effort" value="0"/>-->
+  <!--    <xacro:property name="hip_joint_vel" value="0"/>-->
+  <!--    <xacro:property name="upper_length" value=".125"/>-->
+  <!--    <xacro:property name="upper_radius" value=".015"/>-->
+  <!--    <xacro:property name="upper_mass" value=".0165"/>-->
+  <!--    <xacro:property name="lower_length" value=".115"/>-->
+  <!--    <xacro:property name="lower_radius" value=".013"/>-->
+  <!--    <xacro:property name="lower_mass" value=".0165"/>-->
+  <!--    <xacro:property name="leg_joint_range" value="${pi / 4}"/>-->
+  <!--    <xacro:property name="leg_joint_effort" value="5"/>-->
+  <!--    <xacro:property name="leg_joint_vel" value="0"/>-->
+  <!--    <xacro:property name="foot_radius" value=".015"/>-->
+  <!--    <xacro:property name="foot_mass" value=".001"/>-->
+  <!--    <xacro:property name="front_hip_x" value=".106"/>-->
+  <!--    <xacro:property name="front_hip_y" value=".04"/>-->
+  <!--    <xacro:property name="front_hip_z" value=".0115"/>-->
+  <!--    <xacro:property name="rear_hip_x" value=".095"/>-->
+  <!--    <xacro:property name="rear_hip_y" value=".04"/>-->
+  <!--    <xacro:property name="rear_hip_z" value=".0115"/>-->
+  <!--    <xacro:property name="upper_to_lower_joint_angle" value="-1.57079632679"/>-->
+  <!--    <xacro:property name="hip_to_upper_joint_angle" value="0.78539816339"/>-->
+  <!--    <xacro:property name="hip_to_upper_joint_x" value=".008"/>-->
+  <!--    <xacro:property name="foot_joint_z" value="0.11"/>-->
+  <material name="red">
+    <color rgba="1 0 0 1"/>
+  </material>
+  <link name="torso">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.304 0.1 0.069"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.304 0.1 0.069"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.658"/>
+      <inertia ixx="0.0008093948333333335" ixy="0" ixz="0" iyy="0.005328538833333334" iyz="0" izz="0.005615810666666668"/>
+    </inertial>
+  </link>
+  <!-- FR -->
+  <joint name="FR_hip_joint" type="revolute">
+    <parent link="torso"/>
+    <child link="FR_hip_link"/>
+    <origin rpy="0 0 0" xyz="0.106 -0.04 -0.0115"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="1 0 0"/>
+  </joint>
+  <link name="FR_hip_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 -0.031 0"/>
+      <geometry>
+        <box size="0.062 0.104 0.044"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 -0.031 0"/>
+      <geometry>
+        <box size="0.062 0.104 0.044"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.192"/>
+      <inertia ixx="0.00023456" ixy="0" ixz="0" iyy="9.248e-05" iyz="0" izz="0.00020403200000000001"/>
+    </inertial>
+  </link>
+  <joint name="FR_upper_joint" type="revolute">
+    <parent link="FR_hip_link"/>
+    <child link="FR_upper_link"/>
+    <origin rpy="0 0.78539816339 0" xyz="-0.008 -0.019 0"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="FR_upper_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.0625"/>
+      <geometry>
+        <cylinder length="0.125" radius="0.015"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.0625"/>
+      <geometry>
+        <cylinder length="0.125" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0165"/>
+      <inertia ixx="2.24125e-05" ixy="0" ixz="0" iyy="2.24125e-05" iyz="0" izz="1.85625e-06"/>
+    </inertial>
+  </link>
+  <joint name="FR_lower_joint" type="revolute">
+    <parent link="FR_upper_link"/>
+    <child link="FR_lower_link"/>
+    <origin rpy="0 -1.57079632679 0" xyz="0 0 -0.125"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="FR_lower_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.0575"/>
+      <geometry>
+        <cylinder length="0.115" radius="0.013"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.0575"/>
+      <geometry>
+        <cylinder length="0.115" radius="0.013"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0165"/>
+      <inertia ixx="1.8881500000000002e-05" ixy="0" ixz="0" iyy="1.8881500000000002e-05" iyz="0" izz="1.39425e-06"/>
+    </inertial>
+  </link>
+  <joint name="FR_foot_joint" type="fixed">
+    <parent link="FR_lower_link"/>
+    <child link="FR_foot_link"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.11"/>
+  </joint>
+  <link name="FR_foot_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="9e-08" ixy="0" ixz="0" iyy="9e-08" iyz="0" izz="9e-08"/>
+    </inertial>
+  </link>
+  <!-- FL -->
+  <joint name="FL_hip_joint" type="revolute">
+    <parent link="torso"/>
+    <child link="FL_hip_link"/>
+    <origin rpy="0 0 0" xyz="0.106 0.04 -0.0115"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="1 0 0"/>
+  </joint>
+  <link name="FL_hip_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0.031 0"/>
+      <geometry>
+        <box size="0.062 0.104 0.044"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0.031 0"/>
+      <geometry>
+        <box size="0.062 0.104 0.044"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.192"/>
+      <inertia ixx="0.00023456" ixy="0" ixz="0" iyy="9.248e-05" iyz="0" izz="0.00020403200000000001"/>
+    </inertial>
+  </link>
+  <joint name="FL_upper_joint" type="revolute">
+    <parent link="FL_hip_link"/>
+    <child link="FL_upper_link"/>
+    <origin rpy="0 0.78539816339 0" xyz="-0.008 0.019 0"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="FL_upper_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.0625"/>
+      <geometry>
+        <cylinder length="0.125" radius="0.015"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.0625"/>
+      <geometry>
+        <cylinder length="0.125" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0165"/>
+      <inertia ixx="2.24125e-05" ixy="0" ixz="0" iyy="2.24125e-05" iyz="0" izz="1.85625e-06"/>
+    </inertial>
+  </link>
+  <joint name="FL_lower_joint" type="revolute">
+    <parent link="FL_upper_link"/>
+    <child link="FL_lower_link"/>
+    <origin rpy="0 -1.57079632679 0" xyz="0 0 -0.125"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="FL_lower_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.0575"/>
+      <geometry>
+        <cylinder length="0.115" radius="0.013"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.0575"/>
+      <geometry>
+        <cylinder length="0.115" radius="0.013"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0165"/>
+      <inertia ixx="1.8881500000000002e-05" ixy="0" ixz="0" iyy="1.8881500000000002e-05" iyz="0" izz="1.39425e-06"/>
+    </inertial>
+  </link>
+  <joint name="FL_foot_joint" type="fixed">
+    <parent link="FL_lower_link"/>
+    <child link="FL_foot_link"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.11"/>
+  </joint>
+  <link name="FL_foot_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="9e-08" ixy="0" ixz="0" iyy="9e-08" iyz="0" izz="9e-08"/>
+    </inertial>
+  </link>
+  <!-- RR -->
+  <joint name="RR_hip_joint" type="revolute">
+    <parent link="torso"/>
+    <child link="RR_hip_link"/>
+    <origin rpy="0 0 0" xyz="-0.095 -0.04 -0.0115"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="1 0 0"/>
+  </joint>
+  <link name="RR_hip_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 -0.031 0"/>
+      <geometry>
+        <box size="0.062 0.104 0.044"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 -0.031 0"/>
+      <geometry>
+        <box size="0.062 0.104 0.044"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.192"/>
+      <inertia ixx="0.00023456" ixy="0" ixz="0" iyy="9.248e-05" iyz="0" izz="0.00020403200000000001"/>
+    </inertial>
+  </link>
+  <joint name="RR_upper_joint" type="revolute">
+    <parent link="RR_hip_link"/>
+    <child link="RR_upper_link"/>
+    <origin rpy="0 0.78539816339 0" xyz="-0.008 -0.019 0"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="RR_upper_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.0625"/>
+      <geometry>
+        <cylinder length="0.125" radius="0.015"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.0625"/>
+      <geometry>
+        <cylinder length="0.125" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0165"/>
+      <inertia ixx="2.24125e-05" ixy="0" ixz="0" iyy="2.24125e-05" iyz="0" izz="1.85625e-06"/>
+    </inertial>
+  </link>
+  <joint name="RR_lower_joint" type="revolute">
+    <parent link="RR_upper_link"/>
+    <child link="RR_lower_link"/>
+    <origin rpy="0 -1.57079632679 0" xyz="0 0 -0.125"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="RR_lower_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.0575"/>
+      <geometry>
+        <cylinder length="0.115" radius="0.013"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.0575"/>
+      <geometry>
+        <cylinder length="0.115" radius="0.013"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0165"/>
+      <inertia ixx="1.8881500000000002e-05" ixy="0" ixz="0" iyy="1.8881500000000002e-05" iyz="0" izz="1.39425e-06"/>
+    </inertial>
+  </link>
+  <joint name="RR_foot_joint" type="fixed">
+    <parent link="RR_lower_link"/>
+    <child link="RR_foot_link"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.11"/>
+  </joint>
+  <link name="RR_foot_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="9e-08" ixy="0" ixz="0" iyy="9e-08" iyz="0" izz="9e-08"/>
+    </inertial>
+  </link>
+  <!-- RL -->
+  <joint name="RL_hip_joint" type="revolute">
+    <parent link="torso"/>
+    <child link="RL_hip_link"/>
+    <origin rpy="0 0 0" xyz="-0.095 0.04 -0.0115"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="1 0 0"/>
+  </joint>
+  <link name="RL_hip_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0.031 0"/>
+      <geometry>
+        <box size="0.062 0.104 0.044"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0.031 0"/>
+      <geometry>
+        <box size="0.062 0.104 0.044"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.192"/>
+      <inertia ixx="0.00023456" ixy="0" ixz="0" iyy="9.248e-05" iyz="0" izz="0.00020403200000000001"/>
+    </inertial>
+  </link>
+  <joint name="RL_upper_joint" type="revolute">
+    <parent link="RL_hip_link"/>
+    <child link="RL_upper_link"/>
+    <origin rpy="0 0.78539816339 0" xyz="-0.008 0.019 0"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="RL_upper_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.0625"/>
+      <geometry>
+        <cylinder length="0.125" radius="0.015"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.0625"/>
+      <geometry>
+        <cylinder length="0.125" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0165"/>
+      <inertia ixx="2.24125e-05" ixy="0" ixz="0" iyy="2.24125e-05" iyz="0" izz="1.85625e-06"/>
+    </inertial>
+  </link>
+  <joint name="RL_lower_joint" type="revolute">
+    <parent link="RL_upper_link"/>
+    <child link="RL_lower_link"/>
+    <origin rpy="0 -1.57079632679 0" xyz="0 0 -0.125"/>
+    <limit effort="0" velocity="0"/>
+    <!--                lower="${lower}"-->
+    <!--                upper="${upper}"-->
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="RL_lower_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.0575"/>
+      <geometry>
+        <cylinder length="0.115" radius="0.013"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.0575"/>
+      <geometry>
+        <cylinder length="0.115" radius="0.013"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0165"/>
+      <inertia ixx="1.8881500000000002e-05" ixy="0" ixz="0" iyy="1.8881500000000002e-05" iyz="0" izz="1.39425e-06"/>
+    </inertial>
+  </link>
+  <joint name="RL_foot_joint" type="fixed">
+    <parent link="RL_lower_link"/>
+    <child link="RL_foot_link"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.11"/>
+  </joint>
+  <link name="RL_foot_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="9e-08" ixy="0" ixz="0" iyy="9e-08" iyz="0" izz="9e-08"/>
+    </inertial>
+  </link>
+</robot>
