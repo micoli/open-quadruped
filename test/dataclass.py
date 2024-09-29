@@ -1,15 +1,12 @@
 import dataclasses
 import json
-from typing import List, Optional
+from typing import List
 
-from pydantic import Field, TypeAdapter
-from pydantic.dataclasses import dataclass
-from dataclasses import dataclass
-from openapi_specgen import OpenApiResponse,schema
+from pydantic import TypeAdapter
 from pydantic.dataclasses import dataclass
 import sys
 import inspect
-import pydantic2ts
+
 
 @dataclass
 class DataclassObject():
@@ -26,5 +23,6 @@ def dump_json_schema():
         if inspect.isclass(obj) and dataclasses.is_dataclass(obj):
             with open(f'{name}.json', 'w', encoding='utf-8') as f_out:
                f_out.write(json.dumps(TypeAdapter(obj).json_schema(),indent=4))
+
 
 dump_json_schema()

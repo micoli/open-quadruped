@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Tk, Label, Button
 
 from py_robot_bus import DisplayMode
 from py_robot_bus.bus import Bus

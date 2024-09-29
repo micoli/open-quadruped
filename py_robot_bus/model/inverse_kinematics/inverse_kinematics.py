@@ -1,8 +1,4 @@
-import pprint
-
 import math
-
-import numpy as np
 
 
 class InverseKinematics:

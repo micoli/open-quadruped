@@ -437,7 +437,7 @@ def eval_expr(lex, symbols):
     op = None
     if lex.peek()[0] == lex.OP:
         op = lex.next()[1]
-        if not op in ["+", "-"]:
+        if op not in ["+", "-"]:
             raise XacroException("Invalid operation. Must be '+' or '-'")
 
     result = eval_term(lex, symbols)
@@ -521,7 +521,7 @@ def eval_all(root, macros, symbols):
                 # Expands the macro
                 scoped = Table(symbols)
                 for name, value in node.attributes.items():
-                    if not name in params:
+                    if name not in params:
                         raise XacroException(
                             'Invalid parameter "%s" while expanding macro "%s"' % (str(name), str(node.tagName))
                         )

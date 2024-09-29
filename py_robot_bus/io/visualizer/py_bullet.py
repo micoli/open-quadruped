@@ -23,10 +23,10 @@ class MotorsPositionCommandDecoder:
         self.offset_shoulder = pi / 4
         self.offset_wrist = pi / 2
         self.indices = [
-            names.index(f'FR_hip'), names.index(f'FR_upper'), names.index(f'FR_lower'),
-            names.index(f'FL_hip'), names.index(f'FL_upper'), names.index(f'FL_lower'),
-            names.index(f'RR_hip'), names.index(f'RR_upper'), names.index(f'RR_lower'),
-            names.index(f'RL_hip'), names.index(f'RL_upper'), names.index(f'RL_lower'),
+            names.index('FR_hip'), names.index('FR_upper'), names.index('FR_lower'),
+            names.index('FL_hip'), names.index('FL_upper'), names.index('FL_lower'),
+            names.index('RR_hip'), names.index('RR_upper'), names.index('RR_lower'),
+            names.index('RL_hip'), names.index('RL_upper'), names.index('RL_lower'),
         ]
 
     def decode(self, pos):

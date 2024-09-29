@@ -52,7 +52,7 @@ class UrdfLoader(object):
         process_includes(doc, os.path.dirname(path), xacro_variables)
         eval_self_contained(doc)
 
-        if not ".urdf" in path:
+        if ".urdf" not in path:
             output_path = path.replace(".xacro", ".urdf")
         else:
             output_path = path.replace(".xacro", "")

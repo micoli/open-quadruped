@@ -1,7 +1,6 @@
 import mujoco as mj
 import numpy as np
 from mujoco.glfw import glfw
-from numpy.linalg import inv
 from scipy.spatial.transform import Rotation as R
 
 from mujoco_base import MuJoCoBase

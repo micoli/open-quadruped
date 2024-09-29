@@ -21,10 +21,10 @@ def multiplex():
     from multiplex import Multiplex
 
     mp = Multiplex()
-    mp.add(f"prb pad_control")
-    mp.add(f"prb engine")
-    mp.add(f"prb matplot")
-    mp.add(f"prb pybullet")
+    mp.add("prb pad_control")
+    mp.add("prb engine")
+    mp.add("prb matplot")
+    mp.add("prb pybullet")
     mp.run()
 
 

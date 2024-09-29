@@ -13,6 +13,7 @@ def tests(session):
 def lint(session):
     session.install("poetry")
     session.run("poetry", "install")
+    session.run("ruff", "check", "py_robot_bus/")
     session.run("black", "--check", ".")
     session.run("flake8", ".")
     session.run("pylint")

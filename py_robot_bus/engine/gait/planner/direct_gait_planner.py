@@ -1,5 +1,3 @@
-import pprint
-
 from py_robot_bus.engine.gait.parameters import DirectGaitParameters
 from py_robot_bus.engine.gait.planner import GaitPlanner
 
