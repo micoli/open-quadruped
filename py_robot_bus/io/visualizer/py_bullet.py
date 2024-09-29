@@ -23,31 +23,47 @@ class MotorsPositionCommandDecoder:
         self.offset_shoulder = pi / 4
         self.offset_wrist = pi / 2
         self.indices = [
-            names.index('FR_hip'), names.index('FR_upper'), names.index('FR_lower'),
-            names.index('FL_hip'), names.index('FL_upper'), names.index('FL_lower'),
-            names.index('RR_hip'), names.index('RR_upper'), names.index('RR_lower'),
-            names.index('RL_hip'), names.index('RL_upper'), names.index('RL_lower'),
+            names.index("FR_hip"),
+            names.index("FR_upper"),
+            names.index("FR_lower"),
+            names.index("FL_hip"),
+            names.index("FL_upper"),
+            names.index("FL_lower"),
+            names.index("RR_hip"),
+            names.index("RR_upper"),
+            names.index("RR_lower"),
+            names.index("RL_hip"),
+            names.index("RL_upper"),
+            names.index("RL_lower"),
         ]
 
     def decode(self, pos):
         return [
-            pos.fr.hip - self.offset_hip, pos.fr.shoulder - self.offset_shoulder, pos.fr.wrist - self.offset_wrist,
-            pos.fl.hip + self.offset_hip, pos.fl.shoulder - self.offset_shoulder, pos.fl.wrist - self.offset_wrist,
-            pos.rr.hip - self.offset_hip, pos.rr.shoulder - self.offset_shoulder, pos.rr.wrist - self.offset_wrist,
-            pos.rl.hip + self.offset_hip, pos.rl.shoulder - self.offset_shoulder, pos.rl.wrist - self.offset_wrist
+            pos.fr.hip - self.offset_hip,
+            pos.fr.shoulder - self.offset_shoulder,
+            pos.fr.wrist - self.offset_wrist,
+            pos.fl.hip + self.offset_hip,
+            pos.fl.shoulder - self.offset_shoulder,
+            pos.fl.wrist - self.offset_wrist,
+            pos.rr.hip - self.offset_hip,
+            pos.rr.shoulder - self.offset_shoulder,
+            pos.rr.wrist - self.offset_wrist,
+            pos.rl.hip + self.offset_hip,
+            pos.rl.shoulder - self.offset_shoulder,
+            pos.rl.wrist - self.offset_wrist,
         ]
 
 
 class QuadrupedPyBulletSimulation:
     def __init__(
-            self,
-            urdf_path: str,
-            with_debug_parameters: bool = True,
-            start_position=None,
-            xacro_variables=None
+        self,
+        urdf_path: str,
+        with_debug_parameters: bool = True,
+        start_position=None,
+        xacro_variables=None,
     ):
         if start_position is None:
-            start_position = [0, 0, .25]
+            start_position = [0, 0, 0.25]
         if xacro_variables is None:
             xacro_variables = {}
 
@@ -62,7 +78,9 @@ class QuadrupedPyBulletSimulation:
         self.physics_client = bullet_client.BulletClient(pybullet.GUI)
         self.physics_client.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
         self.physics_client.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 0)
-        self.physics_client.configureDebugVisualizer(pybullet.COV_ENABLE_KEYBOARD_SHORTCUTS, 1)
+        self.physics_client.configureDebugVisualizer(
+            pybullet.COV_ENABLE_KEYBOARD_SHORTCUTS, 1
+        )
         self.start_orientation = pybullet.getQuaternionFromEuler([0, 0, 0])
 
         self.physics_client.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -70,15 +88,12 @@ class QuadrupedPyBulletSimulation:
             cameraDistance=1,
             cameraYaw=135,
             cameraPitch=-45,
-            cameraTargetPosition=[0, 0, 0]
+            cameraTargetPosition=[0, 0, 0],
         )
         self.physics_client.setTimeStep(self.frequency)
 
         self.physics_client.loadURDF("plane.urdf")
-        urdf = UrdfLoader(
-            urdf_path,
-            xacro_variables=xacro_variables
-        )
+        urdf = UrdfLoader(urdf_path, xacro_variables=xacro_variables)
         self.robot = self.physics_client.loadURDF(
             urdf.path,
             self.start_position,
@@ -88,11 +103,13 @@ class QuadrupedPyBulletSimulation:
             globalScaling=1,
         )
 
-        self.physics_client.setGravity(0, 0, -9.81/2)
+        self.physics_client.setGravity(0, 0, -9.81 / 2)
         self.physics_client.setRealTimeSimulation(1)
         self.physics_client.stepSimulation()
         self._load_motors()
-        self.motors_position_command_decoder = MotorsPositionCommandDecoder(self.motor_names)
+        self.motors_position_command_decoder = MotorsPositionCommandDecoder(
+            self.motor_names
+        )
         self.physics_client.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
 
     def _load_motors(self):
@@ -108,7 +125,9 @@ class QuadrupedPyBulletSimulation:
             j_max = joint_info[9]
             j_center = (j_min + j_max) / 2
             self.debug_parameters.append(
-                self.physics_client.addUserDebugParameter(joint_name[:-6], j_min, j_max, j_center)
+                self.physics_client.addUserDebugParameter(
+                    joint_name[:-6], j_min, j_max, j_center
+                )
             )
 
     def run(self):
@@ -140,7 +159,9 @@ class QuadrupedPyBulletSimulation:
                     self.robot,
                     self.motors_position_command_decoder.indices,
                     pybullet.POSITION_CONTROL,
-                    targetPositions=self.motors_position_command_decoder.decode(message)
+                    targetPositions=self.motors_position_command_decoder.decode(
+                        message
+                    ),
                 )
 
     def step_simulation(self):
@@ -149,10 +170,7 @@ class QuadrupedPyBulletSimulation:
     def set_robot_joint_angle(self, index, position):
         try:
             self.physics_client.setJointMotorControl2(
-                self.robot,
-                index,
-                pybullet.POSITION_CONTROL,
-                targetPosition=position
+                self.robot, index, pybullet.POSITION_CONTROL, targetPosition=position
             )
         except TypeError as err:
             pprint.pprint(err)
@@ -160,6 +178,8 @@ class QuadrupedPyBulletSimulation:
             pprint.pprint(err)
 
 
-if __name__ == '__main__':
-    py_bullet_simulation = QuadrupedPyBulletSimulation("../../../models/pupper-v2.xacro.xml", True)
+if __name__ == "__main__":
+    py_bullet_simulation = QuadrupedPyBulletSimulation(
+        "../../../models/pupper-v2.xacro.xml", True
+    )
     py_bullet_simulation.run()

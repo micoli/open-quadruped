@@ -36,7 +36,8 @@ class UrdfLoader(object):
 
         if not os.path.isfile(path):
             raise FileNotFoundError(
-                "I was looking for '{}' (and also without the .xml) " "but couldn't find it".format(path)
+                "I was looking for '{}' (and also without the .xml) "
+                "but couldn't find it".format(path)
             )
 
         f = open(path)

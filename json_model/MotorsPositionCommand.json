@@ -1,0 +1,49 @@
+{
+    "$defs": {
+        "MotorsPosition": {
+            "properties": {
+                "hip": {
+                    "title": "Hip",
+                    "type": "number"
+                },
+                "shoulder": {
+                    "title": "Shoulder",
+                    "type": "number"
+                },
+                "wrist": {
+                    "title": "Wrist",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "hip",
+                "shoulder",
+                "wrist"
+            ],
+            "title": "MotorsPosition",
+            "type": "object"
+        }
+    },
+    "properties": {
+        "rr": {
+            "$ref": "#/$defs/MotorsPosition"
+        },
+        "fr": {
+            "$ref": "#/$defs/MotorsPosition"
+        },
+        "fl": {
+            "$ref": "#/$defs/MotorsPosition"
+        },
+        "rl": {
+            "$ref": "#/$defs/MotorsPosition"
+        }
+    },
+    "required": [
+        "rr",
+        "fr",
+        "fl",
+        "rl"
+    ],
+    "title": "MotorsPositionCommand",
+    "type": "object"
+}

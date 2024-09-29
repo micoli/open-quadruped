@@ -41,7 +41,7 @@ import string
 import sys
 import xml
 
-from xml.dom.minidom import parse,parseString
+from xml.dom.minidom import parse, parseString
 
 try:
     _basestr = basestring
@@ -77,7 +77,10 @@ def fixed_writexml(self, writer, indent="", addindent="", newl=""):
         xml.dom.minidom._write_data(writer, attrs[a_name].value)
         writer.write('"')
     if self.childNodes:
-        if len(self.childNodes) == 1 and self.childNodes[0].nodeType == xml.dom.minidom.Node.TEXT_NODE:
+        if (
+            len(self.childNodes) == 1
+            and self.childNodes[0].nodeType == xml.dom.minidom.Node.TEXT_NODE
+        ):
             writer.write(">")
             self.childNodes[0].writexml(writer, "", "", "")
             writer.write("</%s>%s" % (self.tagName, newl))
@@ -85,7 +88,10 @@ def fixed_writexml(self, writer, indent="", addindent="", newl=""):
         writer.write(">%s" % (newl))
         for node in self.childNodes:
             # skip whitespace-only text nodes
-            if node.nodeType == xml.dom.minidom.Node.TEXT_NODE and not node.data.strip():
+            if (
+                node.nodeType == xml.dom.minidom.Node.TEXT_NODE
+                and not node.data.strip()
+            ):
                 continue
             node.writexml(writer, indent + addindent, addindent, newl)
         writer.write("%s</%s>%s" % (indent, self.tagName, newl))
@@ -217,16 +223,17 @@ def process_includes(doc, base_dir, xacro_variables):
         # other XML elements including Gazebo's <gazebo> extensions
         is_include = False
         if elt.tagName == "xacro:include" or elt.tagName == "include":
-
             is_include = True
             # Temporary fix for ROS Hydro and the xacro include scope problem
             if elt.tagName == "include":
-
                 # check if there is any element within the <include> tag. mostly we are concerned
                 # with Gazebo's <uri> element, but it could be anything. also, make sure the child
                 # nodes aren't just a single Text node, which is still considered a deprecated
                 # instance
-                if elt.childNodes and not (len(elt.childNodes) == 1 and elt.childNodes[0].nodeType == elt.TEXT_NODE):
+                if elt.childNodes and not (
+                    len(elt.childNodes) == 1
+                    and elt.childNodes[0].nodeType == elt.TEXT_NODE
+                ):
                     # this is not intended to be a xacro element, so we can ignore it
                     is_include = False
                 else:
@@ -275,8 +282,8 @@ def process_includes(doc, base_dir, xacro_variables):
 
 
 def include_fragment(filename, xacro_variables):
-    xacro_variables___ = '___xacro_variables___'
-    if filename[-len(xacro_variables___):] == xacro_variables___:
+    xacro_variables___ = "___xacro_variables___"
+    if filename[-len(xacro_variables___) :] == xacro_variables___:
         return parseString(f"""<?xml version="1.0"?>
         <robot xmlns:xacro="http://wiki.ros.org/xacro">
         {'\n'.join([f'<xacro:property name="{name}" value="{xacro_variables[name]}"/>' for name in xacro_variables])}
@@ -287,9 +294,14 @@ def include_fragment(filename, xacro_variables):
             try:
                 return parse(f)
             except Exception as e:
-                raise XacroException('included file "%s" generated an error during XML parsing: %s' % (filename, str(e)))
+                raise XacroException(
+                    'included file "%s" generated an error during XML parsing: %s'
+                    % (filename, str(e))
+                )
     except IOError as e:
-        raise XacroException('included file "%s" could not be opened: %s' % (filename, str(e)))
+        raise XacroException(
+            'included file "%s" could not be opened: %s' % (filename, str(e))
+        )
 
 
 # Returns a dictionary: { macro_name => macro_xml_block }
@@ -339,7 +351,12 @@ def grab_properties(doc):
                     break
 
             if has_bad:
-                sys.stderr.write("Property names may not have whitespace, " + '"{", "}", or "$" : "' + name + '"')
+                sys.stderr.write(
+                    "Property names may not have whitespace, "
+                    + '"{", "}", or "$" : "'
+                    + name
+                    + '"'
+                )
             else:
                 table[name] = value
 
@@ -475,7 +492,10 @@ def eval_text(text, symbols):
 
     results = []
     lex = QuickLexer(
-        DOLLAR_DOLLAR_BRACE=r"\$\$+\{", EXPR=r"\$\{[^\}]*\}", EXTENSION=r"\$\([^\)]*\)", TEXT=r"([^\$]|\$[^{(]|\$$)+"
+        DOLLAR_DOLLAR_BRACE=r"\$\$+\{",
+        EXPR=r"\$\{[^\}]*\}",
+        EXTENSION=r"\$\([^\)]*\)",
+        TEXT=r"([^\$]|\$[^{(]|\$$)+",
     )
     lex.lex(text)
     while lex.peek():
@@ -523,7 +543,8 @@ def eval_all(root, macros, symbols):
                 for name, value in node.attributes.items():
                     if name not in params:
                         raise XacroException(
-                            'Invalid parameter "%s" while expanding macro "%s"' % (str(name), str(node.tagName))
+                            'Invalid parameter "%s" while expanding macro "%s"'
+                            % (str(name), str(node.tagName))
                         )
                     params.remove(name)
                     scoped[name] = eval_text(value, symbols)
@@ -537,7 +558,10 @@ def eval_all(root, macros, symbols):
                         while block and block.nodeType != xml.dom.Node.ELEMENT_NODE:
                             block = block.nextSibling
                         if not block:
-                            raise XacroException("Not enough blocks while evaluating macro %s" % str(node.tagName))
+                            raise XacroException(
+                                "Not enough blocks while evaluating macro %s"
+                                % str(node.tagName)
+                            )
                         params.remove(param)
                         scoped[param] = block
                         block = block.nextSibling
@@ -550,7 +574,8 @@ def eval_all(root, macros, symbols):
 
                 if params:
                     raise XacroException(
-                        "Parameters [%s] were not set for macro %s" % (",".join(params), str(node.tagName))
+                        "Parameters [%s] were not set for macro %s"
+                        % (",".join(params), str(node.tagName))
                     )
                 eval_all(body, macros, scoped)
 
@@ -689,13 +714,16 @@ def main():
     except xml.parsers.expat.ExpatError:
         sys.stderr.write("Expat parsing error.  Check that:\n")
         sys.stderr.write(" - Your XML is correctly formed\n")
-        sys.stderr.write(" - You have the xacro xmlns declaration: " + 'xmlns:xacro="http://www.ros.org/wiki/xacro"\n')
+        sys.stderr.write(
+            " - You have the xacro xmlns declaration: "
+            + 'xmlns:xacro="http://www.ros.org/wiki/xacro"\n'
+        )
         sys.stderr.write("\n")
         raise
     finally:
         f.close()
 
-    process_includes(doc, os.path.dirname(args[0]),{})
+    process_includes(doc, os.path.dirname(args[0]), {})
     if just_deps:
         for inc in all_includes:
             sys.stdout.write(inc + " ")
@@ -709,7 +737,8 @@ def main():
             xml.dom.minidom.Comment(c)
             for c in [
                 " %s " % ("=" * 83),
-                " |    This document was autogenerated by xacro from %-30s | " % args[0],
+                " |    This document was autogenerated by xacro from %-30s | "
+                % args[0],
                 " |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED  %-30s | " % "",
                 " %s " % ("=" * 83),
             ]

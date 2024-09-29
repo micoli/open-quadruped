@@ -4,7 +4,7 @@ class GaitParameters:
 
 
 class DirectGaitParameters(GaitParameters):
-    def __init__(self,name):
+    def __init__(self, name):
         self.name = name
 
     def get_name(self):
@@ -13,17 +13,17 @@ class DirectGaitParameters(GaitParameters):
 
 class CycleGaitParameters(GaitParameters):
     def __init__(
-            self,
-            name,
-            phase_lag,
-            T_swing,
-            L_span,
-            v_d,
-            penetration_alpha,
-            base_height,
-            y,
-            x_shift,
-            clearance
+        self,
+        name,
+        phase_lag,
+        T_swing,
+        L_span,
+        v_d,
+        penetration_alpha,
+        base_height,
+        y,
+        x_shift,
+        clearance,
     ):
         self.name = name
         self.phase_lag = phase_lag

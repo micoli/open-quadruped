@@ -20,9 +20,13 @@ class Bezier:
     @staticmethod
     def rotate_about_z(x, z, theta):
         theta = math.radians(theta)
-        R = np.array([[np.cos(theta), -np.sin(theta), 0],
-                      [np.sin(theta), np.cos(theta), 0],
-                      [0, 0, 1]])
+        R = np.array(
+            [
+                [np.cos(theta), -np.sin(theta), 0],
+                [np.sin(theta), np.cos(theta), 0],
+                [0, 0, 1],
+            ]
+        )
         v = np.array([x, 0, z])
         rotated = R.dot(v)
         return rotated
@@ -31,8 +35,8 @@ class Bezier:
         x = 0
         y = 0
         for i, point in enumerate(self.cp):
-            x += self.coeff[i] * (1 - t)**(self.n - i) * t**i * point[0]
-            y += self.coeff[i] * (1 - t)**(self.n - i) * t**i * point[1]
+            x += self.coeff[i] * (1 - t) ** (self.n - i) * t**i * point[0]
+            y += self.coeff[i] * (1 - t) ** (self.n - i) * t**i * point[1]
         return [x, y]
 
     @staticmethod
@@ -43,14 +47,29 @@ class Bezier:
         return [
             [x_center - L_span, base_height],
             [x_center - L_span - 80.5 * x_scaling_factor, base_height],
-            [x_center - L_span - 100 * x_scaling_factor,base_height - 138.9 * y_scaling_factor - clearance],
-            [x_center - L_span - 100 * x_scaling_factor,base_height - 138.9 * y_scaling_factor - clearance],
-            [x_center - L_span - 100 * x_scaling_factor,base_height - 138.9 * y_scaling_factor - clearance],
+            [
+                x_center - L_span - 100 * x_scaling_factor,
+                base_height - 138.9 * y_scaling_factor - clearance,
+            ],
+            [
+                x_center - L_span - 100 * x_scaling_factor,
+                base_height - 138.9 * y_scaling_factor - clearance,
+            ],
+            [
+                x_center - L_span - 100 * x_scaling_factor,
+                base_height - 138.9 * y_scaling_factor - clearance,
+            ],
             [x_center, base_height - 138.9 * y_scaling_factor - clearance],
             [x_center, base_height - 138.9 * y_scaling_factor - clearance],
             [x_center, base_height - 178.6 * y_scaling_factor - clearance],
-            [x_center + L_span + 103.2 * x_scaling_factor,base_height - 178.6 * y_scaling_factor - clearance],
-            [x_center + L_span + 103.2 * x_scaling_factor,base_height - 178.6 * y_scaling_factor - clearance],
+            [
+                x_center + L_span + 103.2 * x_scaling_factor,
+                base_height - 178.6 * y_scaling_factor - clearance,
+            ],
+            [
+                x_center + L_span + 103.2 * x_scaling_factor,
+                base_height - 178.6 * y_scaling_factor - clearance,
+            ],
             [x_center + L_span + 82.6 * x_scaling_factor, base_height],
-            [x_center + L_span, base_height]
+            [x_center + L_span, base_height],
         ]

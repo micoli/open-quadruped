@@ -1,0 +1,23 @@
+{
+    "properties": {
+        "hip": {
+            "title": "Hip",
+            "type": "number"
+        },
+        "shoulder": {
+            "title": "Shoulder",
+            "type": "number"
+        },
+        "wrist": {
+            "title": "Wrist",
+            "type": "number"
+        }
+    },
+    "required": [
+        "hip",
+        "shoulder",
+        "wrist"
+    ],
+    "title": "MotorsPosition",
+    "type": "object"
+}

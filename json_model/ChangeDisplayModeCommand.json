@@ -1,0 +1,22 @@
+{
+    "$defs": {
+        "DisplayMode": {
+            "enum": [
+                1,
+                2
+            ],
+            "title": "DisplayMode",
+            "type": "integer"
+        }
+    },
+    "properties": {
+        "mode": {
+            "$ref": "#/$defs/DisplayMode"
+        }
+    },
+    "required": [
+        "mode"
+    ],
+    "title": "ChangeDisplayModeCommand",
+    "type": "object"
+}

@@ -1,0 +1,47 @@
+{
+    "properties": {
+        "x": {
+            "default": 0,
+            "title": "X",
+            "type": "integer"
+        },
+        "y": {
+            "default": 0,
+            "title": "Y",
+            "type": "integer"
+        },
+        "z": {
+            "default": 0,
+            "title": "Z",
+            "type": "integer"
+        },
+        "yaw": {
+            "default": 0,
+            "title": "Yaw",
+            "type": "integer"
+        },
+        "pitch": {
+            "default": 0,
+            "title": "Pitch",
+            "type": "integer"
+        },
+        "roll": {
+            "default": 0,
+            "title": "Roll",
+            "type": "integer"
+        },
+        "right_joy": {
+            "default": [
+                0,
+                0
+            ],
+            "items": {
+                "type": "integer"
+            },
+            "title": "Right Joy",
+            "type": "array"
+        }
+    },
+    "title": "QuadrupedPoseParameter",
+    "type": "object"
+}

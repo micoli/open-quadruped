@@ -8,7 +8,7 @@ from py_robot_bus.bus import Bus
 from py_robot_bus.bus.message import Channels
 
 
-@Bus.register('input')
+@Bus.register("input")
 class ChangeDisplayModeCommand(BaseModel):
     mode: DisplayMode
 
@@ -41,15 +41,15 @@ class QuadrupedPoseParameter(BaseModel):
         self.x = self.y = self.z = self.yaw = self.pitch = self.roll = 0
 
     def inc(self, parameter, increment):
-        if parameter == 'x':
+        if parameter == "x":
             self.x += increment
-        if parameter == 'y':
+        if parameter == "y":
             self.y += increment
-        if parameter == 'z':
+        if parameter == "z":
             self.z += increment
-        if parameter == 'yaw':
+        if parameter == "yaw":
             self.yaw += increment
-        if parameter == 'pitch':
+        if parameter == "pitch":
             self.pitch += increment
-        if parameter == 'roll':
+        if parameter == "roll":
             self.roll += increment

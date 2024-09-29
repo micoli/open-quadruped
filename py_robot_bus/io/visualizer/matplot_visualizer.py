@@ -16,33 +16,35 @@ from py_robot_bus.bus.message.quadruped_position_event import QuadrupedPositionE
 
 
 class MatplotVisualizer:
-    def __init__(self, window_size: int = 500, animate_interval: int = 50, height: int = 170):
+    def __init__(
+        self, window_size: int = 500, animate_interval: int = 50, height: int = 170
+    ):
         self.window_size = window_size
         self.animate_interval = animate_interval
         self.start_height = height
 
         self.redis_client, self.pubsub = create_redis([Channels.position, Channels.sys])
         self.fig = plt.figure()
-        self.fig.canvas.manager.set_window_title('Animate')
+        self.fig.canvas.manager.set_window_title("Animate")
         plt.get_current_fig_manager().window.wm_geometry("400x400+1800+0")
-        self.ax = self.fig.add_subplot(111, projection='3d')
+        self.ax = self.fig.add_subplot(111, projection="3d")
 
         self.legend = True
         self.actions = {
-            '1': 'reset',
-            'x': 'x',
-            'y': 'y',
-            'z': 'z',
-            'a': 'yaw',
-            'p': 'pitch',
-            'r': 'roll',
+            "1": "reset",
+            "x": "x",
+            "y": "y",
+            "z": "z",
+            "a": "yaw",
+            "p": "pitch",
+            "r": "roll",
         }
 
     def _run(self):
         while True:
             for message in Bus.receive_messages(self.pubsub):
                 if isinstance(message, QuitCommand):
-                    plt.close('all')
+                    plt.close("all")
                     sys.exit(0)
                 if isinstance(message, QuadrupedPositionEvent):
                     self.draw_robot(message)
@@ -56,18 +58,15 @@ class MatplotVisualizer:
     def draw_robot(self, position: QuadrupedPositionEvent):
         self._setup_graph()
         vectors = position.body
-        self.ax.plot(
-            vectors.x, vectors.y, vectors.z,
-            color='blue'
-        )
+        self.ax.plot(vectors.x, vectors.y, vectors.z, color="blue")
         vectors = position.fr
-        self.ax.plot(vectors.x, vectors.y, vectors.z, color='blue')
+        self.ax.plot(vectors.x, vectors.y, vectors.z, color="blue")
         vectors = position.fl
-        self.ax.plot(vectors.x, vectors.y, vectors.z, color='red')
+        self.ax.plot(vectors.x, vectors.y, vectors.z, color="red")
         vectors = position.rr
-        self.ax.plot(vectors.x, vectors.y, vectors.z, color='orange')
+        self.ax.plot(vectors.x, vectors.y, vectors.z, color="orange")
         vectors = position.rl
-        self.ax.plot(vectors.x, vectors.y, vectors.z, color='green')
+        self.ax.plot(vectors.x, vectors.y, vectors.z, color="green")
 
         self.fig.canvas.draw_idle()
 
@@ -80,9 +79,9 @@ class MatplotVisualizer:
         self.ax.set_zlim3d(-self.start_height, self.window_size - self.start_height)
 
         if self.legend:
-            self.ax.set_xlabel('x (mm)')
-            self.ax.set_ylabel('y (mm)')
-            self.ax.set_zlabel('z (mm)')
+            self.ax.set_xlabel("x (mm)")
+            self.ax.set_ylabel("y (mm)")
+            self.ax.set_zlabel("z (mm)")
             # self.ax.legend(
             #     loc='best',
             #     handles=[Patch(facecolor='b', label=f'[{key}] {label}') for (key, label) in self.actions.items()]

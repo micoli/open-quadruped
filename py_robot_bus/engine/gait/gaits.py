@@ -2,10 +2,22 @@ import pprint
 import time
 from typing import List
 
-from py_robot_bus.engine.gait.parameters import CycleGaitParameters, GaitParameters, DirectGaitParameters
+from py_robot_bus.engine.gait.parameters import (
+    CycleGaitParameters,
+    GaitParameters,
+    DirectGaitParameters,
+)
 from py_robot_bus.engine.gait.planner import GaitPlanner
-from py_robot_bus.engine.gait.planner.cycle_gait_planner import CycleGaitPlanner, crawl, trot, fast_trot
-from py_robot_bus.engine.gait.planner.direct_gait_planner import DirectGaitPlanner, get_up
+from py_robot_bus.engine.gait.planner.cycle_gait_planner import (
+    CycleGaitPlanner,
+    crawl,
+    trot,
+    fast_trot,
+)
+from py_robot_bus.engine.gait.planner.direct_gait_planner import (
+    DirectGaitPlanner,
+    get_up,
+)
 
 DEBUG = False
 
@@ -28,7 +40,7 @@ class Gaits:
         self.gait_index = index
         gait_parameter = self.gait_parameters[index]
         self.set_start_time(time.time())
-        pprint.pprint(f'Gait: {gait_parameter.get_name()}')
+        pprint.pprint(f"Gait: {gait_parameter.get_name()}")
 
         if isinstance(gait_parameter, CycleGaitParameters):
             self.planner = CycleGaitPlanner(gait_parameter)
@@ -44,9 +56,11 @@ class Gaits:
         # 'RR', 'FR', 'FL', 'RL'
         legs_pos = []
         for leg_index in range(0, 4):
-            x,y,z = self.planner.generate_x_y_z(_time - self.gait_start_time, leg_index, joy_x, joy_y)
+            x, y, z = self.planner.generate_x_y_z(
+                _time - self.gait_start_time, leg_index, joy_x, joy_y
+            )
             if DEBUG:
-                pprint.pprint(f'{leg_index},x:{x}/y:{y}/z:{z}')
+                pprint.pprint(f"{leg_index},x:{x}/y:{y}/z:{z}")
             legs_pos.append((x, y, z))
 
         return legs_pos

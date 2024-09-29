@@ -4,7 +4,7 @@ from py_robot_bus.engine.gait.planner import GaitPlanner
 from py_robot_bus.math.bezier import Bezier
 
 crawl = CycleGaitParameters(
-    'crawl',
+    "crawl",
     phase_lag=[0, 0.5, 0.75, 0.25],
     T_swing=0.4,
     L_span=70,
@@ -13,11 +13,11 @@ crawl = CycleGaitParameters(
     base_height=160,
     y=55,
     x_shift=-25,
-    clearance=25
+    clearance=25,
 )
 
 trot = CycleGaitParameters(
-    'trot',
+    "trot",
     phase_lag=[0, 0.5, 0.5, 0],
     T_swing=0.3,
     L_span=50,
@@ -26,11 +26,11 @@ trot = CycleGaitParameters(
     base_height=150,
     y=55,
     x_shift=-40,
-    clearance=5
+    clearance=5,
 )
 
 fast_trot = CycleGaitParameters(
-    'fast_trot',
+    "fast_trot",
     phase_lag=[0, 0.5, 0.5, 0],
     T_swing=0.2,
     L_span=40,
@@ -39,22 +39,26 @@ fast_trot = CycleGaitParameters(
     base_height=150,
     y=60,
     x_shift=-60,
-    clearance=10
+    clearance=10,
 )
 
 
 class CycleGaitPlanner(GaitPlanner):
     def __init__(self, gait: CycleGaitParameters):
-        self.stance = Bezier(Bezier.get_cp_from_param(
-            L_span=gait.L_span,
-            base_height=gait.base_height,
-            clearance=gait.clearance
-        ))
-        self.swing = Bezier([
-            [gait.L_span, gait.base_height],
-            [0, gait.base_height + gait.penetration_alpha],
-            [-gait.L_span, gait.base_height]
-        ])
+        self.stance = Bezier(
+            Bezier.get_cp_from_param(
+                L_span=gait.L_span,
+                base_height=gait.base_height,
+                clearance=gait.clearance,
+            )
+        )
+        self.swing = Bezier(
+            [
+                [gait.L_span, gait.base_height],
+                [0, gait.base_height + gait.penetration_alpha],
+                [-gait.L_span, gait.base_height],
+            ]
+        )
         self.t_stance = gait.T_stance
         self.t_swing = gait.T_swing
         self.phase_lag = gait.phase_lag
