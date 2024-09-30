@@ -73,5 +73,14 @@ def pad_dump_schema():
     )
 
 
+@dev.command(name="bezier")
+def bezier():
+    click.echo("bezier")
+    from py_robot_bus.io.visualizer.bezier_matplot import BezierVisualizer
+
+    visualizer = BezierVisualizer()
+    visualizer.run()
+
+
 if __name__ == "__main__":
     cli()
